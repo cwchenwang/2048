@@ -1,0 +1,86 @@
+html, body {
+  background: #f7f3e4;
+  font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+}
+
+/* h1 {
+  text-align: center;
+} */
+
+.container {
+  width: 600px;
+  height: 600px;
+  padding: 5px;
+  background-color: #e7d9a7; 
+  margin: 0 auto;
+}
+
+.title div {
+  /* float: left; */
+}
+
+.topbar {
+  width: 100%;
+  height: 60px;
+}
+
+.title {
+  margin-left: 200px;
+  background-color: rgb(226, 195, 56);
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 30px;
+  padding: 15px 15px;
+  border-radius: 4px;
+  /* text-align: center; */
+  color: white;
+  /* margin: 0 auto; */
+  font-weight: bold;
+  margin: 20px;
+  display: inline-block;
+  /* float: left */
+}
+
+.score {
+  margin-left: 200px;
+  background-color: rgb(226, 195, 56);
+  width: 200px;
+  height: 60px;
+  line-height: 60px;
+  font-size: 30px;
+  padding: 15px 15px;
+  border-radius: 4px;
+  /* text-align: center; */
+  color: white;
+  /* margin: 0 auto; */
+  font-weight: bold;
+  margin: 20px;
+  display: inline-block;
+}
+
+#grid-container
+{
+  border: 5px;
+	width: 400px;
+	height: 400px;
+	padding: 20px;
+	margin: 5px auto;
+	background-color: rgb(182, 182, 182);
+	border-radius: 10px;
+	position: relative;
+}
+
+.grid-cell
+{
+	width: 90px;
+	height: 90px;
+	border-radius: 8px;
+  background-color: rgba(206, 206, 206, 0.5);
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  font-size: 60px;
+  line-height: 90px;
+  text-align: center;
+}
