@@ -7,7 +7,6 @@ var cellSpace;
 var board = new Array(numCells);
 var availPlace = new Array(numCells*numCells); //an array that stores the index of available positions
 var score = 0;
-var prev_score = 0;
 
 $(document).ready(function () {
   containerWidth = $("#grid-container").width(); 
@@ -21,9 +20,14 @@ $(document).ready(function () {
 function initView() {
   for(var i = 0; i < numCells; i++) {
     for(var j = 0; j < numCells; j++) {
+      $("#grid-container").append('<div class="number-cell" id="number-cell-'+i+'-'+j+'"></div>');
       var gridCell = $('#grid-cell-' + i + '-' + j);
       gridCell.css('top', containerPadding + i * (cellWidth + cellSpace));
       gridCell.css('left', containerPadding + j * (cellWidth + cellSpace));
+
+      var numberCell = $('#number-cell-' + i + '-' + j);
+      numberCell.css('top', containerPadding + i * (cellWidth + cellSpace));
+      numberCell.css('left', containerPadding + j * (cellWidth + cellSpace));
     }
   }
 }
@@ -32,9 +36,10 @@ function initGame() {
   score = 0;
   for(var i = 0; i < numCells; i++) {
     board[i] = Array(numCells);
-    for(var j = 0; j < numCells; j++) board[i][j] = 0;
+    for(var j = 0; j < numCells; j++) {
+      board[i][j] = 0;
+    }
   }
-  // board[0][2] = 0;
   for(i = 0; i < numCells*numCells; i++) 
     availPlace[i] = i;
   genNum();
@@ -47,7 +52,7 @@ function initGame() {
 }
 
 function showNum(row, col, number) {
-  var gridCell = $('#grid-cell-' + row + '-' + col);
+  var gridCell = $('#number-cell-' + row + '-' + col);
   gridCell.css('top', containerPadding + row * (cellWidth + cellSpace));
   gridCell.css('left', containerPadding + col * (cellWidth + cellSpace));
   gridCell.css('background-color', getNumBgColor(number));
@@ -71,13 +76,13 @@ function genNum() {
   availPlace.splice(index, 1);
   var row = Math.floor(place / numCells);
   var col = place - numCells * row;
-  console.log(row);
-  console.log(col);
   showNum(row, col, number);
 }
 
 $(document).keydown(function(event) {
-  prev_score = score;
+  if(judgeLose()) {
+    alert("Lose game");
+  }
   switch(event.keyCode) {
     case 37: //left
       moveLeft();
@@ -96,7 +101,65 @@ $(document).keydown(function(event) {
   }
 });
 
+function judgeLose() {
+  if(judgeLeft() || judgeRight() || judgeDown() || judgeUp()) return false;
+  return true;
+}
+function judgeArr(arr) {
+  var hasZero = false;
+  for(var i = 0; i < numCells; i++) {
+    if(arr[i] == 0) {
+      hasZero = true;
+    } 
+    if(hasZero && arr[i] != 0) {
+      return true;
+    }
+    if(i != 0 && arr[i] != 0 && arr[i] == arr[i-1]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function judgeLeft() {
+  for(var i = 0; i < numCells; i++) {
+    var arr = board[i];
+    if(judgeArr(arr)) return true;
+  }
+  return false;
+}
+
+function judgeRight() {
+  for(var i = 0; i < numCells; i++) {
+    var arr = [];
+    arr = board[i].concat();
+    arr.reverse();
+    if(judgeArr(arr)) return true;
+  }
+  return false;
+}
+
+function judgeUp() {
+  for(var i = 0; i < numCells; i++) {
+    var arr = [];
+    for(var j = 0; j < numCells; j++) arr.push(board[j][i]);
+    if(judgeArr(arr)) return true;
+  }
+  return false;
+}
+
+function judgeDown() {
+  for(var i = 0; i < numCells; i++) {
+    var arr = [];
+    for(var j = 0; j < numCells; j++) arr.push(board[j][i]);
+    arr.reverse();
+    if(judgeArr(arr)) return true;
+  }
+  return false;
+}
+
 function moveUp() {
+  if(judgeUp() == false) return;
   for(var i = 0; i < numCells; i++) {
     var col = [];
     var ori_pos = [];
@@ -134,9 +197,11 @@ function moveUp() {
   setTimeout(function() {
     updateBoardView();
   }, 200);
+  return true;
 }
 
 function moveLeft() {
+  if(judgeLeft() == false) return;
   for(var i = 0; i < numCells; i++) {
     var row = [];
     var ori_pos = [];
@@ -174,9 +239,11 @@ function moveLeft() {
   setTimeout(function() {
     updateBoardView();
   }, 200);
+  return true;
 }
 
 function moveRight() {
+  if(judgeRight() == false) return;
   for(var i = 0; i < numCells; i++) {
     var row = [];
     var ori_pos = [];
@@ -214,9 +281,11 @@ function moveRight() {
   setTimeout(function() {
     updateBoardView();
   }, 200);
+  return true;
 }
 
 function moveDown() {
+  if(judgeDown() == false) return;
   for(var i = 0; i < numCells; i++) {
     var col = [];
     var ori_pos = [];
@@ -254,24 +323,44 @@ function moveDown() {
   setTimeout(function() {
     updateBoardView();
   }, 200);
+  return true;
 }
 
 function moveAnimation(fromx, fromy, tox, toy) {
-  var cell = $("#grid-cell-"+fromx+"-"+fromy);
+  // var cell = $("#grid-cell-"+fromx+"-"+fromy);
+  var cell = $(`#number-cell-${fromx}-${fromy}`);
   cell.animate({
     top: containerPadding + tox * (cellWidth + cellSpace),
     left: containerPadding + toy * (cellWidth + cellSpace)
   }, 200);
 }
 
-function updateBoardView() {
-  genNum();
-  $(".grid-cell").remove();
+function judgeWin() {
   for(var i = 0; i < numCells; i++) {
     for(var j = 0; j < numCells; j++) {
-      $("#grid-container").append('<div class="grid-cell" id="grid-cell-'+i+'-'+j+'"></div>');
+      if(board[i][j] == 2048) return true;
+    }
+  }
+  return false;
+}
+
+function updateBoardView() {
+  genNum();
+  $(".number-cell").remove();
+  for(var i = 0; i < numCells; i++) {
+    for(var j = 0; j < numCells; j++) {
+      $("#grid-container").append('<div class="number-cell" id="number-cell-'+i+'-'+j+'"></div>');
       showNum(i, j, board[i][j]);
     }
   }
   $("#score").text("Score: "+score);
+  if(judgeWin()) {
+    alert("You win!");
+  }
+}
+
+function replay() {
+  $(".number-cell").remove();
+  initView();
+  initGame();
 }

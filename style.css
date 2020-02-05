@@ -59,6 +59,23 @@ html, body {
   display: inline-block;
 }
 
+#replay {
+  margin-left: 200px;
+  background-color: rgb(226, 195, 56);
+  width: 150px;
+  height: 60px;
+  line-height: 40px;
+  font-size: 20px;
+  padding: 15px 15px;
+  border-radius: 4px;
+  /* text-align: center; */
+  color: white;
+  /* margin: 0 auto; */
+  font-weight: bold;
+  margin: 20px;
+  display: inline-block;
+}
+
 #grid-container
 {
   border: 5px;
@@ -80,7 +97,21 @@ html, body {
   color: white;
   font-weight: bold;
   position: absolute;
-  font-size: 60px;
+  font-size: 50px;
+  line-height: 90px;
+  text-align: center;
+}
+
+.number-cell
+{
+	width: 90px;
+	height: 90px;
+	border-radius: 8px;
+  background-color: rgba(206, 206, 206, 0.5);
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  font-size: 30px;
   line-height: 90px;
   text-align: center;
 }
