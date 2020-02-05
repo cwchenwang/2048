@@ -42,7 +42,7 @@ html, body {
   /* float: left */
 }
 
-.score {
+#score {
   margin-left: 200px;
   background-color: rgb(226, 195, 56);
   width: 200px;
